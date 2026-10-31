@@ -1,0 +1,19 @@
+AJOUTER LES 11 PHOTOS DE LA PAGE « EXPÉRIENCES »
+
+Copiez vos 11 photos dans ce dossier public/ avec exactement ces noms :
+1.jpg
+2.jpg
+3.jpg
+4.jpg
+5.jpg
+6.jpg
+7.jpg
+8.jpg
+9.jpg
+10.jpg
+11.jpg
+
+Respectez les extensions .jpg en minuscules. La page /experiences les affiche
+automatiquement dans l'ordre numérique. Les images sont recadrées pour garder
+la grille actuelle ; privilégiez des photos verticales ou des cadrages qui
+supportent un recadrage au format portrait.
