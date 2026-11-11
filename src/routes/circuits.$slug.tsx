@@ -1084,14 +1084,17 @@ export const Route = createFileRoute("/circuits/$slug")({
 
     const title = `${circuit.title} | Randonnée au Maroc – Voyager Autrement`;
 
-    const description = [
-      circuit.description.split(".")[0]?.trim() || circuit.tagline,
-      `Circuit de ${circuit.duration.toLowerCase()}.`,
-      `Niveau : ${circuit.level.toLowerCase()}.`,
-      "Découvrez ce voyage avec Voyager Autrement.",
-    ]
-      .join(" ")
-      .slice(0, 160);
+    const descriptionText = [
+  circuit.description.split(".")[0]?.trim() || circuit.tagline,
+  `Circuit de ${circuit.duration.toLowerCase()}.`,
+  `Niveau : ${circuit.level.toLowerCase()}.`,
+  "Découvrez ce voyage avec Voyager Autrement.",
+].join(" ");
+
+const description =
+  descriptionText.length > 160
+    ? `${descriptionText.slice(0, 157).replace(/\s+\S*$/, "")}...`
+    : descriptionText;
 
     return seo(`/circuits/${params.slug}`, title, description);
   },

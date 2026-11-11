@@ -22,12 +22,25 @@ import toubkal from "@/assets/toubkal.png";
 import yagouZat from "@/assets/yagou-zat.png";
 
 export const Route = createFileRoute("/circuits")({
-  head: () =>
-    seo(
-      "/circuits",
-      "Circuits et randonnées au Maroc — Voyager Autrement",
-      "Explorez nos circuits au Maroc : randonnées dans l’Atlas, Jbel Siroua, Jbel Saghro, Toubkal et découverte du Sahara.",
-    ),
+  head: ({ matches }) => {
+  const isCircuitDetail = matches.some(
+    (match) => String(match.routeId) === "/circuits/$slug",
+  );
+
+  const metadata = seo(
+    "/circuits",
+    "Circuits et randonnées au Maroc — Voyager Autrement",
+    "Explorez nos circuits au Maroc : randonnées dans l’Atlas, Jbel Siroua, Jbel Saghro, Toubkal et découverte du Sahara.",
+  );
+
+  if (isCircuitDetail) {
+    return {
+      meta: metadata.meta,
+    };
+  }
+
+  return metadata;
+},
   component: CircuitsPage,
 });
 
