@@ -3,6 +3,10 @@ import { useState, type FormEvent, type ReactNode } from "react";
 import { toast } from "sonner";
 import { tripTypes } from "@/lib/content";
 import { useI18n } from "@/lib/i18n";
+import {
+  sendContactMessage,
+  sendQuoteRequest,
+} from "@/lib/email.functions";
 
 const field =
   "w-full rounded-sm border border-input bg-card px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-1 focus:ring-primary";
@@ -26,21 +30,6 @@ function F({
   );
 }
 
-function useSubmit(msg: string) {
-  const [sent, setSent] = useState(false);
-
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    // TODO: Connect to email/backend to actually deliver requests.
-    setSent(true);
-    toast.success(msg);
-    e.currentTarget.reset();
-  };
-
-  return { sent, onSubmit };
-}
-
 function Privacy() {
   const { t } = useI18n();
 
@@ -52,18 +41,73 @@ function Privacy() {
   );
 }
 
-const tripTypeLabels: Record<string, { fr: string; en: string; de: string; it: string }> = {
+const tripTypeLabels: Record<
+  string,
+  { fr: string; en: string; de: string; it: string }
+> = {
   Couple: { fr: "Couple", en: "Couple", de: "Paar", it: "Coppia" },
   Famille: { fr: "Famille", en: "Family", de: "Familie", it: "Famiglia" },
   Amis: { fr: "Amis", en: "Friends", de: "Freunde", it: "Amici" },
-  "Voyage privé": { fr: "Voyage privé", en: "Private trip", de: "Privatreise", it: "Viaggio privato" },
+  "Voyage privé": {
+    fr: "Voyage privé",
+    en: "Private trip",
+    de: "Privatreise",
+    it: "Viaggio privato",
+  },
   Groupe: { fr: "Groupe", en: "Group", de: "Gruppe", it: "Gruppo" },
-  "Voyage sur mesure": { fr: "Voyage sur mesure", en: "Tailor-made trip", de: "Individuell gestaltete Reise", it: "Viaggio su misura" },
+  "Voyage sur mesure": {
+    fr: "Voyage sur mesure",
+    en: "Tailor-made trip",
+    de: "Individuell gestaltete Reise",
+    it: "Viaggio su misura",
+  },
 };
 
 export function QuoteForm() {
   const { t, lang } = useI18n();
-  const { sent, onSubmit } = useSubmit(t("form.successQuote"));
+  const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const form = e.currentTarget;
+    const values = new FormData(form);
+
+    setSending(true);
+
+    try {
+      await sendQuoteRequest({
+        data: {
+          firstName: String(values.get("firstName") ?? ""),
+          lastName: String(values.get("lastName") ?? ""),
+          email: String(values.get("email") ?? ""),
+          phone: String(values.get("phone") ?? ""),
+          country: String(values.get("country") ?? ""),
+          dates: String(values.get("dates") ?? ""),
+          travelers: Number(values.get("travelers") || 2),
+          type: String(values.get("type") ?? ""),
+          destinations: String(values.get("destinations") ?? ""),
+          budget: String(values.get("budget") ?? ""),
+          message: String(values.get("message") ?? ""),
+          lang,
+        },
+      });
+
+      setSent(true);
+      toast.success(t("form.successQuote"));
+      form.reset();
+    } catch (error) {
+      console.error("Quote submission failed:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Unable to send your request. Please try again.",
+      );
+    } finally {
+      setSending(false);
+    }
+  };
 
   return (
     <form onSubmit={onSubmit} className="grid gap-6 sm:grid-cols-2">
@@ -86,7 +130,15 @@ export function QuoteForm() {
       <F label={t("form.country")}>
         <input
           name="country"
-          defaultValue={lang === "fr" ? "Suisse" : lang === "it" ? "Svizzera" : lang === "de" ? "Schweiz" : "Switzerland"}
+          defaultValue={
+            lang === "fr"
+              ? "Suisse"
+              : lang === "it"
+                ? "Svizzera"
+                : lang === "de"
+                  ? "Schweiz"
+                  : "Switzerland"
+          }
           className={field}
         />
       </F>
@@ -103,6 +155,7 @@ export function QuoteForm() {
         <input
           type="number"
           min={1}
+          max={30}
           name="travelers"
           defaultValue={2}
           className={field}
@@ -154,17 +207,55 @@ export function QuoteForm() {
       <Privacy />
 
       <button
-        className="rounded-sm bg-primary px-8 py-4 text-sm font-semibold text-primary-foreground transition hover:bg-secondary sm:col-span-2 sm:justify-self-start"
+        type="submit"
+        disabled={sending}
+        className="rounded-sm bg-primary px-8 py-4 text-sm font-semibold text-primary-foreground transition hover:bg-secondary disabled:cursor-not-allowed disabled:opacity-60 sm:col-span-2 sm:justify-self-start"
       >
-        {sent ? t("cta.sendAnother") : t("cta.sendRequest")}
+        {sending
+          ? "..."
+          : sent
+            ? t("cta.sendAnother")
+            : t("cta.sendRequest")}
       </button>
     </form>
   );
 }
 
 export function ContactForm() {
-  const { t } = useI18n();
-  const { onSubmit } = useSubmit(t("form.successContact"));
+  const { t, lang } = useI18n();
+  const [sending, setSending] = useState(false);
+
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const form = e.currentTarget;
+    const values = new FormData(form);
+
+    setSending(true);
+
+    try {
+      await sendContactMessage({
+        data: {
+          fullName: String(values.get("fullName") ?? ""),
+          email: String(values.get("email") ?? ""),
+          message: String(values.get("message") ?? ""),
+          lang,
+        },
+      });
+
+      toast.success(t("form.successContact"));
+      form.reset();
+    } catch (error) {
+      console.error("Contact submission failed:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Unable to send your message. Please try again.",
+      );
+    } finally {
+      setSending(false);
+    }
+  };
 
   return (
     <form onSubmit={onSubmit} className="grid gap-6 sm:grid-cols-2">
@@ -188,8 +279,12 @@ export function ContactForm() {
 
       <Privacy />
 
-      <button className="rounded-sm bg-primary px-8 py-4 text-sm font-semibold text-primary-foreground transition hover:bg-secondary sm:justify-self-start">
-        {t("cta.send")}
+      <button
+        type="submit"
+        disabled={sending}
+        className="rounded-sm bg-primary px-8 py-4 text-sm font-semibold text-primary-foreground transition hover:bg-secondary disabled:cursor-not-allowed disabled:opacity-60 sm:justify-self-start"
+      >
+        {sending ? "..." : t("cta.send")}
       </button>
     </form>
   );
