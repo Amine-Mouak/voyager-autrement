@@ -18,7 +18,7 @@ const circuitSlugs = [
 ];
 const routes = [
   "/", "/circuits", ...circuitSlugs.map((slug) => `/circuits/${slug}`),
-  "/experiences", "/destinations", "/voyages", "/contact", "/devis",
+  "/experiences", "/destinations", "/voyages", "/voyage-maroc-depuis-suisse", "/contact", "/devis",
   "/politique-confidentialite", "/mentions-legales", "/politique-cookies",
   "/conditions-generales",
 ];

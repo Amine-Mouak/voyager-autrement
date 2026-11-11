@@ -20,6 +20,7 @@ import { Route as ExperiencesRouteImport } from './routes/experiences'
 import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
 import { Route as PolitiqueConfidentialiteRouteImport } from './routes/politique-confidentialite'
 import { Route as PolitiqueCookiesRouteImport } from './routes/politique-cookies'
+import { Route as VoyageMarocDepuisSuisseRouteImport } from './routes/voyage-maroc-depuis-suisse'
 import { Route as VoyagesRouteImport } from './routes/voyages'
 import { Route as CircuitsSlugRouteImport } from './routes/circuits.$slug'
 
@@ -79,6 +80,11 @@ const PolitiqueCookiesRoute = PolitiqueCookiesRouteImport.update({
   path: '/politique-cookies',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VoyageMarocDepuisSuisseRoute = VoyageMarocDepuisSuisseRouteImport.update({
+  id: '/voyage-maroc-depuis-suisse',
+  path: '/voyage-maroc-depuis-suisse',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VoyagesRoute = VoyagesRouteImport.update({
   id: '/voyages',
   path: '/voyages',
@@ -102,6 +108,7 @@ export interface FileRoutesByFullPath {
   '/mentions-legales': typeof MentionsLegalesRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
   '/politique-cookies': typeof PolitiqueCookiesRoute
+  '/voyage-maroc-depuis-suisse': typeof VoyageMarocDepuisSuisseRoute
   '/voyages': typeof VoyagesRoute
   '/circuits/$slug': typeof CircuitsSlugRoute
 }
@@ -117,6 +124,7 @@ export interface FileRoutesByTo {
   '/mentions-legales': typeof MentionsLegalesRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
   '/politique-cookies': typeof PolitiqueCookiesRoute
+  '/voyage-maroc-depuis-suisse': typeof VoyageMarocDepuisSuisseRoute
   '/voyages': typeof VoyagesRoute
   '/circuits/$slug': typeof CircuitsSlugRoute
 }
@@ -133,6 +141,7 @@ export interface FileRoutesById {
   '/mentions-legales': typeof MentionsLegalesRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
   '/politique-cookies': typeof PolitiqueCookiesRoute
+  '/voyage-maroc-depuis-suisse': typeof VoyageMarocDepuisSuisseRoute
   '/voyages': typeof VoyagesRoute
   '/circuits/$slug': typeof CircuitsSlugRoute
 }
@@ -150,6 +159,7 @@ export interface FileRouteTypes {
     | '/mentions-legales'
     | '/politique-confidentialite'
     | '/politique-cookies'
+    | '/voyage-maroc-depuis-suisse'
     | '/voyages'
     | '/circuits/$slug'
   fileRoutesByTo: FileRoutesByTo
@@ -165,6 +175,7 @@ export interface FileRouteTypes {
     | '/mentions-legales'
     | '/politique-confidentialite'
     | '/politique-cookies'
+    | '/voyage-maroc-depuis-suisse'
     | '/voyages'
     | '/circuits/$slug'
   id:
@@ -180,6 +191,7 @@ export interface FileRouteTypes {
     | '/mentions-legales'
     | '/politique-confidentialite'
     | '/politique-cookies'
+    | '/voyage-maroc-depuis-suisse'
     | '/voyages'
     | '/circuits/$slug'
   fileRoutesById: FileRoutesById
@@ -196,6 +208,7 @@ export interface RootRouteChildren {
   MentionsLegalesRoute: typeof MentionsLegalesRoute
   PolitiqueConfidentialiteRoute: typeof PolitiqueConfidentialiteRoute
   PolitiqueCookiesRoute: typeof PolitiqueCookiesRoute
+  VoyageMarocDepuisSuisseRoute: typeof VoyageMarocDepuisSuisseRoute
   VoyagesRoute: typeof VoyagesRoute
 }
 
@@ -278,6 +291,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PolitiqueCookiesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/voyage-maroc-depuis-suisse': {
+      id: '/voyage-maroc-depuis-suisse'
+      path: '/voyage-maroc-depuis-suisse'
+      fullPath: '/voyage-maroc-depuis-suisse'
+      preLoaderRoute: typeof VoyageMarocDepuisSuisseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/voyages': {
       id: '/voyages'
       path: '/voyages'
@@ -319,6 +339,7 @@ const rootRouteChildren: RootRouteChildren = {
   MentionsLegalesRoute: MentionsLegalesRoute,
   PolitiqueConfidentialiteRoute: PolitiqueConfidentialiteRoute,
   PolitiqueCookiesRoute: PolitiqueCookiesRoute,
+  VoyageMarocDepuisSuisseRoute: VoyageMarocDepuisSuisseRoute,
   VoyagesRoute: VoyagesRoute,
 }
 export const routeTree = rootRouteImport

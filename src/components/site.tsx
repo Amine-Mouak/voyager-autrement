@@ -226,6 +226,12 @@ export function Footer() {
           <Link to="/devis" className="hover:text-primary">
             {t("footer.quote")}
           </Link>
+          <Link
+            to="/voyage-maroc-depuis-suisse"
+            className="hover:text-primary"
+          >
+            Voyage au Maroc depuis la Suisse
+          </Link>
         </nav>
 
         <div className="text-sm">
