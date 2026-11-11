@@ -1069,17 +1069,31 @@ function CircuitDetailPage() {
   );
 }
 
+
 export const Route = createFileRoute("/circuits/$slug")({
   head: ({ params }) => {
-    const name = params.slug
-      .split("-")
-      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-      .join(" ");
-    return seo(
-      `/circuits/${params.slug}`,
-      `${name} — Circuit et randonnée au Maroc | Voyager Autrement`,
-      `Découvrez notre circuit ${name} au Maroc : paysages, étapes et informations pour préparer votre voyage avec Voyager Autrement.`,
-    );
+    const circuit = circuits.find((item) => item.slug === params.slug);
+
+    if (!circuit) {
+      return seo(
+        `/circuits/${params.slug}`,
+        "Circuit au Maroc | Voyager Autrement",
+        "Découvrez nos voyages et randonnées au Maroc avec Voyager Autrement.",
+      );
+    }
+
+    const title = `${circuit.title} | Randonnée au Maroc – Voyager Autrement`;
+
+    const description = [
+      circuit.description.split(".")[0]?.trim() || circuit.tagline,
+      `Circuit de ${circuit.duration.toLowerCase()}.`,
+      `Niveau : ${circuit.level.toLowerCase()}.`,
+      "Découvrez ce voyage avec Voyager Autrement.",
+    ]
+      .join(" ")
+      .slice(0, 160);
+
+    return seo(`/circuits/${params.slug}`, title, description);
   },
   component: CircuitDetailPage,
 });

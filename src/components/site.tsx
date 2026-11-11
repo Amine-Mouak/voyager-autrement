@@ -237,7 +237,7 @@ export function Footer() {
             <br />
             Taliouine par taroudant.
           </p>
-          <p className="mt-1">contact@voyager-autrement.ch</p>
+          <p className="mt-1">contact@voyagerautrement.ch</p>
           <p className="mt-1">+41 779767613</p>
         </div>
       </div>

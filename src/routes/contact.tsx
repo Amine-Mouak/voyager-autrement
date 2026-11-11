@@ -37,7 +37,7 @@ function ContactPage() {
           <div>
             <dt className="eyebrow text-muted-foreground">E-mail</dt>
             <dd className="mt-1 font-serif text-2xl">
-              contact@voyager-autrement.ch
+              contact@voyagerautrement.ch
             </dd>
           </div>
 
