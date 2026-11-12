@@ -32,7 +32,7 @@ function ExperiencesPage() {
         aria-label={localText(lang, { fr: "Galerie de souvenirs de voyage", en: "Travel photo memories", de: "Reisefotogalerie", it: "Galleria di ricordi di viaggio" })}
         className="container-x grid gap-5 py-24 sm:grid-cols-2 lg:grid-cols-3"
       >
-        {Array.from({ length: 25 }, (_, index) => {
+        {Array.from({ length: 24 }, (_, index) => {
           const number = index + 1;
           return (
             <Reveal key={number} delay={(index % 3) * 100}>
