@@ -117,6 +117,46 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
+  useEffect(() => {
+    const preventCopy = (event: ClipboardEvent) => {
+  const target = event.target;
+
+  if (
+    target instanceof HTMLInputElement ||
+    target instanceof HTMLTextAreaElement ||
+    (target instanceof HTMLElement && target.isContentEditable)
+  ) {
+    return;
+  }
+
+  if (window.getSelection()?.toString()) {
+    event.preventDefault();
+  }
+};
+
+    const preventImageContextMenu = (event: MouseEvent) => {
+      if (event.target instanceof HTMLImageElement) {
+        event.preventDefault();
+      }
+    };
+
+    const preventImageDrag = (event: DragEvent) => {
+      if (event.target instanceof HTMLImageElement) {
+        event.preventDefault();
+      }
+    };
+
+    document.addEventListener("copy", preventCopy);
+    document.addEventListener("contextmenu", preventImageContextMenu);
+    document.addEventListener("dragstart", preventImageDrag);
+
+    return () => {
+      document.removeEventListener("copy", preventCopy);
+      document.removeEventListener("contextmenu", preventImageContextMenu);
+      document.removeEventListener("dragstart", preventImageDrag);
+    };
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
